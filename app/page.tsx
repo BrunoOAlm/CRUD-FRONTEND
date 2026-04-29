@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation"
 import { Lock, Mail, Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react"
 import AnimatedBackground from "@/components/animated-background"
 
+const API = process.env.NEXT_PUBLIC_API_URL
+
 export default function Page() {
   const router = useRouter()
 
   const [show, setShow] = useState(false)
 
-  // 🔥 NOVO STATE INTELIGENTE
   const [gta, setGta] = useState<{
     type: "success" | "error"
     action: "login" | "register"
@@ -23,10 +24,10 @@ export default function Page() {
   const [signupEmail, setSignupEmail] = useState("")
   const [signupSenha, setSignupSenha] = useState("")
 
-  // 🔐 LOGIN
+  // 🔐 LOGIN (CORRIGIDO)
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8080/auth/login", {
+      const response = await fetch(`${API}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,9 +43,9 @@ export default function Page() {
 
       setGta({ type: "success", action: "login" })
 
-      // 🎉 confetti
       const cx = window.innerWidth / 2
       const cy = window.innerHeight / 2
+
       for (let i = 0; i < 4; i++) {
         setTimeout(() => {
           window.dispatchEvent(
@@ -66,10 +67,10 @@ export default function Page() {
     setTimeout(() => setGta(null), 2200)
   }
 
-  // 🆕 REGISTER
+  // 🆕 REGISTER (CORRIGIDO)
   const handleRegister = async () => {
     try {
-      const response = await fetch("http://localhost:8080/auth/register", {
+      const response = await fetch(`${API}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,14 +100,12 @@ export default function Page() {
       <div className="relative min-h-screen flex items-center justify-center text-white">
         <div className="w-[360px]">
 
-          {/* CARD */}
           <div className="rounded-3xl border border-white/15 bg-[#0a0418]/80 p-6">
 
             <h1 className="text-center text-xl font-semibold mb-4">
               Bem-vindo de volta
             </h1>
 
-            {/* EMAIL */}
             <div className="relative mb-3">
               <Mail className="absolute left-3 top-3 text-white/40 size-4" />
               <input
@@ -118,7 +117,6 @@ export default function Page() {
               />
             </div>
 
-            {/* SENHA */}
             <div className="relative mb-3">
               <Lock className="absolute left-3 top-3 text-white/40 size-4" />
               <input
@@ -136,7 +134,6 @@ export default function Page() {
               </button>
             </div>
 
-            {/* BOTÃO LOGIN */}
             <button
               onClick={handleLogin}
               className="w-full py-3 rounded-xl bg-gradient-to-r from-pink-500 to-cyan-400 flex items-center justify-center gap-2"
@@ -146,7 +143,6 @@ export default function Page() {
               <ArrowRight size={16} />
             </button>
 
-            {/* REGISTER LINK */}
             <p className="mt-4 text-center text-sm text-white/50">
               Não tem conta?{" "}
               <span
@@ -161,7 +157,6 @@ export default function Page() {
         </div>
       </div>
 
-      {/* GTA EFFECT */}
       {gta && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40">
           <h1 className={`text-4xl font-bold ${
@@ -178,7 +173,6 @@ export default function Page() {
         </div>
       )}
 
-      {/* MODAL REGISTER */}
       {showSignup && (
         <div
           className="fixed inset-0 grid place-items-center bg-black/70"
